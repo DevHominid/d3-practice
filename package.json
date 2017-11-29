@@ -1,0 +1,11 @@
+{
+  "name": "d3-practice",
+  "version": "1.0.0",
+  "description": "learning by doing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dylan Ross Ludwick",
+  "license": "ISC"
+}
