@@ -4,10 +4,175 @@
     <meta charset="utf-8">
     <title>D3 Demos</title>
     <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3-selection.v1.min.js"></script>
   </head>
   <body>
+    <p>hello</p>
+    <p>hello</p>
+    <p>hello</p>
+
+    <span>world</span>
+    <span>world</span>
+
+    <svg>
+      <circle cx="40" cy="100" r="50"/>
+      <circle cx="60" cy ="60" r="50"/>
+    </svg>
+
+    <div class="hello">
+      <li>unchanged</li>
+    </div>
+
     <script>
-      console.log(d3.version);
+      // ====================================
+      // D3 SELECTIONS ~ * ~ * ~ * ~ * ~ * ~
+      // ====================================
+
+      // ==================
+      // Selecting elements
+      // ==================
+      // d3.select(selector)
+      // d3.selectAll(selector)
+
+      console.log(d3.select('body'));
+
+      // ==================
+      // Styling elements
+      // ==================
+      // selection.style(name[, value[, priority]])
+      // value = constant || function
+      // priority = important || null
+
+      d3.selectAll("p")
+          .style("color", "red");
+
+      d3.selectAll("span")
+          .style("background", function(d, i) {
+            return "blue";
+          })
+          .style("color", function(d, i) {
+            return "white";
+          });
+
+      // ==================
+      // Modifying attributes
+      // ==================
+      // selection.attr(name[, value])
+
+      const svgRef = d3.select("svg")
+          .attr("width", 500)
+          .attr("height", 400);
+
+      console.log("width: " + svgRef.attr("width")); // 500
+
+      d3.selectAll("circle")
+          .attr("fill", "red")
+          .attr("stroke", "green")
+          .attr("r", function(d, i) {
+            return (i + 1) * 2;
+          });
+
+      // ==================
+      // Modifying properties
+      // ==================
+      // selection.property(name[, value])
+
+      // ==================
+      // Adding or removing classes
+      // ==================
+      // selection.classed(names[, value])
+      // value = true (adds) || false (removes)
+
+      d3.selectAll("p")
+          .classed("foo bar", true);
+
+      d3.select("p")
+          .classed("bar", false);
+
+      // ==================
+      // Modifying contents
+      // ==================
+      // selection.text([value])
+      // selection.html([value]) note: only supported on HTML elements
+
+      d3.select("p")
+          .text("friend");
+
+      d3.select("div")
+          .html("<li>changed</li>");
+
+      // ==================
+      // Appending elements
+      // ==================
+      // selection.append(type)
+
+      d3.selectAll("div")
+        .append("p")
+            .text("new paragraph");
+
+      // ==================
+      // Inserting elements
+      // ==================
+      // selection.insert(type [, before])
+      // type = <tag name>
+      // returns new selection (inserted elements)
+
+      d3.select("body")
+        .insert("div", "p")
+            .text("here i am");
+
+      d3.select("body")
+        .insert("div", "div")
+            .text("me 2");
+
+      // ==================
+      // Removing elements
+      // ==================
+      // selection.remove()
+      // returns new selection (removed elements)
+
+      d3.select("div")
+        .remove();
+
+      // ==================
+      // Filtering elements from selection
+      // ==================
+      // selection.filter(filter)
+      // filter = selector string || function
+
+      d3.select("body")
+        .insert("div", "div")
+            .html("<table><tr></tr><tr></tr><tr></tr><tr></tr></table>")
+
+      d3.selectAll("tr").filter(":nth-child(even)")
+          .style("background", "green")
+          .text("even row");
+
+      d3.selectAll("tr").filter(":nth-child(odd)")
+          .style("background", "red")
+          .text("odd row");
+
+      // ==================
+      // Merging selections
+      // ==================
+      // selection.merge(other)
+      // returns new selection (merged with other)
+
+      // ==================
+      // Each method
+      // ==================
+
+      d3.select("body")
+        .append("div")
+            .html("<p>brains</p><p>need</p><p>oxygen</p>")
+
+      d3.selectAll("div").each(function(d, i) {
+        d3.select(this)
+          .selectAll("p")
+              .style("color", "orange");
+      });
+
+
     </script>
   </body>
 </html>
