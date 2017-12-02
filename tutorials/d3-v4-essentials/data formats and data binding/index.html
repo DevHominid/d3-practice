@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Data formats and data binding</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3-array.v1.min.js"></script>
+    <script src="https://d3js.org/d3-collection.v1.min.js"></script>
+  </head>
+  <body>
+
+
+    <script>
+      // ====================================
+      // DATA FORMATS AND DATA BINDING ~ * ~
+      // ====================================
+
+      // ==================
+      // Array
+      // ==================
+      // d3.min(array[, accessor])
+      // d3.max(array[, accessor])
+      // d3.extent(array[, accessor])
+      // d3.sum(array[, accessor])
+      // d3.mean(array[, accessor])
+      // d3.merge(arrays)
+      // d3.ticks(start, stop, count)
+      // d3.tickStep(start, stop, count)
+
+      const arr = [20, 14, 32, 8, 16, 2];
+
+      console.log(arr);
+      console.log('min: ' + d3.min(arr));
+      console.log('max: ' + d3.max(arr));
+      console.log('extent: ' + d3.extent(arr));
+      console.log('sum: ' + d3.sum(arr));
+      console.log('mean: ' + d3.mean(arr));
+      console.log(d3.merge([[1, 2], [3, 4, 5]]));
+      console.log(d3.ticks(0, 10, 5));
+      console.log(d3.tickStep(0, 10, 5));
+
+      // Note the following
+      d3.min(["52", "8"]); // "52" - This is because elements are compared using natural order rather than numeric order.
+      d3.max(["12", "2"]); // "2" - This is because elements are compared using natural order rather than numeric order.
+
+      console.log(
+        d3.max([
+        {name: 'John', age: 28},
+        {name: 'Jack', age: 35}
+      ], function(d, i) {
+        return d.age;
+      }));
+
+      // ==================
+      // Collection
+      // ==================
+      // d3.min(array[, accessor])
+      // d3.max(array[, accessor])
+      // d3.extent(array[, accessor])
+      // d3.sum(array[, accessor])
+      // d3.mean(array[, accessor])
+      // d3.merge(arrays)
+      // d3.ticks(start, stop, count)
+      // d3.tickStep(start, stop, count)
+
+    </script>
+  </body>
+</html>
