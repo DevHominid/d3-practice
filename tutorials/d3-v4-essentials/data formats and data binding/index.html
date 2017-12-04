@@ -6,8 +6,13 @@
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/d3-array.v1.min.js"></script>
     <script src="https://d3js.org/d3-collection.v1.min.js"></script>
+    <script src="https://d3js.org/d3-dsv.v1.min.js"></script>
   </head>
   <body>
+    <svg width="400" height="100" style="border: 1px solid">
+      <circle cx="100" cy="70" r="10" fill="red"/>
+      <circle cx="200" cy="70" r="20" fill="blue"/>
+    </svg>
 
 
     <script>
@@ -18,6 +23,8 @@
       // ==================
       // Array
       // ==================
+      // npm install d3-array
+      //
       // d3.min(array[, accessor])
       // d3.max(array[, accessor])
       // d3.extent(array[, accessor])
@@ -54,14 +61,66 @@
       // ==================
       // Collection
       // ==================
-      // d3.min(array[, accessor])
-      // d3.max(array[, accessor])
-      // d3.extent(array[, accessor])
-      // d3.sum(array[, accessor])
-      // d3.mean(array[, accessor])
-      // d3.merge(arrays)
-      // d3.ticks(start, stop, count)
-      // d3.tickStep(start, stop, count)
+      // npm install d3-collection
+      //
+      // d3.keys(object)
+      // d3.values(object)
+      // d3.entries(object)
+
+      const person = {name: 'John', age: 28};
+      console.log(person);
+
+      console.log(d3.keys(person)); // ["name", "age"]
+      console.log(d3.values(person)); // ["john", "28"]
+      console.log(d3.entries(person)); // [{key: "name", value: "John"}, {key: "age", value: 28}]
+
+      // Creating nested data:
+
+      const tweets = [
+      	{user: 'John', topic: 'technology', numberOfTweets: 10},
+      	{user: 'John', topic: 'politics', numberOfTweets: 30},
+      	{user: 'Jack', topic: 'technology', numberOfTweets: 20},
+      	{user: 'John', topic: 'entertainment', numberOfTweets: 5},
+      	{user: 'Jack', topic: 'politics', numberOfTweets: 10}
+      ];
+
+      console.log(
+        d3.nest()
+          .key(function(d) { return d.user; })
+          .entries(tweets)
+      );
+
+      // ==================
+      // Loading data from external files
+      // ==================
+      // npm install d3-dsv
+
+      // To Parse
+      d3.csvParse("name,age\nJohn,28"); // [{name: "John", age: "28"}, {columns: ["name", "age"]}]
+      d3.tsvParse("name\tage\nJohn\t28"); // [{name: "John", age: "28"}, {columns: "name", "age"}]
+
+      // To format
+      d3.csvFormat([{name: "John", age: 28}]); // "name,age\nJohn,28"
+      d3.tsvFormat([{name: "John", age: 28}]); // "name\tage\nJohn\t28"
+
+      // ==================
+      // Data binding
+      // ==================
+      //
+
+      const circles = d3.select("svg")
+        .selectAll("circle")
+        .data([30, 40]);
+
+      console.log(circles);
+      console.log(circles.nodes());
+
+
+
+
+
+
+
 
     </script>
   </body>
