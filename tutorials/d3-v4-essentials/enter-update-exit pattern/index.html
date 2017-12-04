@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>The Enter-Update-Exit Pattern</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3-array.v1.min.js"></script>
+    <script src="https://d3js.org/d3-collection.v1.min.js"></script>
+    <script src="https://d3js.org/d3-dsv.v1.min.js"></script>
+  </head>
+  <body>
+    <svg width="400" height"100" style="border: 1px solid">
+			<circle cx="100" cy="70" r="10" fill="red"/>
+			<circle cx="200" cy="70" r="20" fill="blue"/>
+		</svg>
+
+    <script>
+      // ====================================
+      // THE ENTER-UPDATE-EXIT PATTERN ~ * ~
+      // ====================================
+
+      const circles = d3.select("svg")
+        .selectAll("circle");
+
+      const data= [10, 20, 30, 40, 50];
+      console.log(circles.data(data));
+
+      circles.data(data); // Gives the update set
+      circles.data(data).enter(); // Gives the enter set
+      circles.data(data).exit(); // Gives the exit set
+
+      // Using enter() to add new DOM elements
+      circles.data(data)
+        .enter()
+        .append("circle");
+
+      // Using exit() to remove surplus DOM elements
+      circles.data(data)
+        .exit()
+        .remove();
+
+      // ==================
+      //  The update pattern
+      // ==================
+
+      // Select all existing circles and bind data
+      const moreCircles = d3.selectAll("circle")
+        .data(data);
+
+       // Update existing circles
+       moreCircles.attr("fill", "red");
+
+       // Remove surplus circles
+       moreCircles.exit().remove();
+
+       // Add new circles and then create a new selection
+       // merging the new and existing circles and then
+       // update the merged selection
+       moreCircles.enter()
+         .append("circle")
+         .merge(moreCircles)
+         .attr("fill", "green"); 
+
+
+
+
+    </script>
+  </body>
+</html>
