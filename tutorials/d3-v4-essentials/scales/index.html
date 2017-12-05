@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Scales</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+  </head>
+  <body>
+    <svg width="500" height="500" style="border: 1px solid"></svg>
+
+    <script>
+      // ====================================
+      // Scales ~ * ~
+      // ====================================
+      // npm install d3-scale
+
+      // Scales are functions that map an input domain to an output range
+
+      const data = [10, 15, 25, 120, 500, 980, 1200];
+
+      // 3 different types of scale viz:
+      // - Continuous (Linear, Power, Log, Identity, Time)
+      // - Sequential
+      // - Quantize
+      // - Threshold
+      // - Ordinal (Band, Point, Category)
+
+      const yScale = d3.scaleLinear()
+        .domain([10, 1200]) // min and max value in our data array
+        .range([0, 500]); // min and max value of our svg container
+
+      // Now we can see how our values are mapped
+      console.log(yScale(10)); // 0
+      console.log(yScale(500)); // 205.88
+      console.log(yScale(980)); // 407.56
+      console.log(yScale(1200)); // 500
+
+      d3.select("svg")
+        .selectAll("rect")
+        .data(data)
+        .enter()
+        .append("rect")
+          .attr("width", 30)
+          .attr("height", function(d) { return yScale(d); })
+          .attr("x", function(d, i) { return i * 30; })
+          .attr("y", function(d) { return 500 - yScale(d); })
+          .attr("fill", "blue")
+          .attr("stroke", "black")
+          .attr("stroke-width", "1px")
+          .attr("opacity", .25);
+
+      // The domain array must contain two or more elements. If the elements in
+      // the given array are not numbers, they will be coerced to numbers.
+
+      // Elements in the given range array need not be numbers; any value that
+      // is supported by the underlying interpolator will work.
+
+      // Ex)
+
+      let colorScale = d3.scaleLinear()
+        .domain([1, 10])
+        .range(["red", "green"]);
+      colorScale(1); // "rgb(255, 0, 0)"
+      colorScale(10); // "rgb(0, 128, 0)"
+
+      // ==================
+      // Using interpolators
+      // ==================
+
+      let colorScale = d3.scaleLinear()
+        .domain([1, 10])
+        .range(["red", "green"]);
+        .interpolate(d3.interpolateHcl);
+
+        // ==================
+        // Clamping
+        // ==================
+        // Ensure the return value of scale is always within the range.
+
+        // By default clamping is disabled
+        var x = d3.scaleLinear()
+          .domain([10, 100])
+          .range([0, 500]);
+        x(2); // -44.44444444444444
+        x(150); // 777.7777777777778
+
+        // Enable clamping
+        x.clamp(true);
+        x(2); // 0 -- Clamped to the min of range
+        x(150); // 500 -- Clamped to the max of range
+
+    </script>
+  </body>
+</html>
