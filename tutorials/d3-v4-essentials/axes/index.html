@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Axes</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3-axis.v1.min.js"></script>
+
+    <style>
+    .grid-line {
+      fill: grey;
+      stroke: grey;
+      stroke-width: 0.3px;
+    }
+    </style>
+
+  </head>
+  <body>
+
+    <script>
+      // ====================================
+      // Axes ~ * ~
+      // ====================================
+      // npm install d3-axis
+      //
+      // d3.axisTop(scale) : A horizontal axis with labels placed on top of the axis
+      // d3.axisBottom(scale) : A horizontal axis with labels placed at the bottom of the axis
+      // d3.axisLeft(scale) : A vertical axis with labels placed on the left hand side of the axis
+      // d3.axisRight(scale) : A vertical axis with labels placed on the right hand side of the axis
+
+      const svgContainer = d3.select("body")
+        .append("svg")
+          .attr("width", 500)
+          .attr("height", 400)
+          .style("padding", "10px")
+          .style("border", "1px solid");
+
+      const xScale = d3.scaleLinear()
+          .domain([0, 100])
+          .range([0, 500]);
+
+      const xAxis = d3.axisBottom(xScale);
+
+      svgContainer.append("g")
+          .call(xAxis);
+
+      // To place the axis at the bottom of the container
+      // note: 390 = height - padding
+      /*
+      svgContainer.append("g")
+          .attr("transform", function() {
+            return "translate(" + 0 + ", " + 390 + ")";
+          })
+          .call(xAxis)
+      */
+
+      // ==================
+      // Customizing ticks
+      // ==================
+      // ticks() : This tells D3 how many ticks we want to render in the axis. But this is just a suggestion to D3. D3 can create slightly more or less ticks based on the available real estate and its own calculation.
+      // tickPadding() : Sets the space between tick labels and the axis.
+      // tickFormat() : Gives custom format to the labels.
+
+      const svgContainer2 = d3.select("body")
+        .append("svg")
+          .attr("width", 500)
+          .attr("height", 400)
+          .style("padding", "10px")
+          .style("border", "1px solid");
+
+      const xScale2 = d3.scaleLinear()
+          .domain([0, 100])
+          .range([0, 500]);
+
+      const xAxis2 = d3.axisBottom(xScale2)
+          .ticks(5)
+          .tickPadding(10)
+          .tickFormat(function(d) { return d + "%"; });
+
+      svgContainer2.append("g")
+          .call(xAxis2);
+
+      // ==================
+      // Drawing gridlines
+      // ==================
+
+      function drawGrid() {
+
+        const width = 500;
+        const height = 500;
+        const margin = 25;
+        const axisLength = width - 2 * margin; // Leave margin on both sides left-right
+
+        // The main container to house our axes groups
+        const svgContainer = d3.select("body")
+          .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .style("border", "1px solid");
+
+        // Renders the X-axis and the vertical grid lines
+        function renderXAxis() {
+          const xScale = d3.scaleLinear()
+            .domain([0, 100])
+            .range([0, axisLength]);
+
+          const xAxis = d3.axisBottom(xScale);
+
+          svgContainer.append("g")
+            // Give a class name to the x-axis group so that we can target it
+            .classed("x-axis", true)
+            .attr("transform", function() {
+              // Translate the x-axis to the bottom of the container leaving
+              // margin on the left and bottom
+              return "translate(" + margin + "," + (height - margin) + ")";
+            })
+            .call(xAxis);
+
+            // For each of the tick component create a line element inside the group
+	          // This creates the vertical lines of the grid
+            svgContainer.selectAll("g.x-axis g.tick")
+              .append("line")
+              .classed("grid-line", true)
+              // x1,y1 sets the starting point of the line
+              // x2,y2 sets the destination point of the line
+              // Since the line is inside the g element and the g element is already
+              // translated we just need to set the y2 value
+              .attr("x1", 0)
+              .attr("y1", 0)
+              .attr("x2", 0)
+              .attr("y2", -(height - 2 * margin));
+        }
+
+        // This creates the horizontal lines of the grid
+        function renderYAxis() {
+          const yScale = d3.scaleLinear()
+	          .domain([100, 0])
+	          .range([0, axisLength]);
+
+          const yAxis = d3.axisLeft(yScale);
+
+          svgContainer.append("g")
+		        .classed("y-axis", true)
+		        .attr("transform", function() {
+		          return "translate(" + margin + "," + margin + ")";
+		        })
+		        .call(yAxis);
+
+          svgContainer.selectAll("g.y-axis g.tick")
+            .append("line")
+              .classed("grid-line", true)
+              .attr("x1", 0)
+              .attr("y1", 0)
+              .attr("x2", axisLength)
+              .attr("y2", 0)
+        }
+
+        renderXAxis();
+        renderYAxis();
+      }
+      drawGrid();
+
+
+    </script>
+  </body>
+</html>
