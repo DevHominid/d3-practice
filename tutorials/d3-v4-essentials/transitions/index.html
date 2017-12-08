@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Transitions</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+  </head>
+  <body>
+    <p>Default - cubic-in-out</p>
+    <div class="default" style="width:100px; height:100px; position:relative; background-color:red"></div>
+
+    <p>Elastic</p>
+    <div class="elastic" style="width:100px; height:50px; background-color:red"></div>
+    <p>Bounce</p>
+    <div class="bounce" style="width:100px; height:50px; background-color:red"></div>
+    <p>Back</p>
+    <div class="back" style="width:100px; height:50px; background-color:red"></div>
+
+    <p>Transition chaining</p>
+    <div class="shape" style="width:100px; height:100px; background-color:blue; margin: auto"></div>
+
+    <script>
+      // ====================================
+      // Transitions ~ * ~
+      // ====================================
+      // npm install d3-transition
+      //
+      // transition() returns a new selection with all the elements that were
+      // already present in the selection returned by select(), but the new
+      // selection has each of its elements bound to transition
+
+      d3.select("el")
+        .transition()
+          .style("width", "100px")
+          .style("height", "100px")
+          .style("background-color", "red");
+
+      // ==================
+      // Delays
+      // ==================
+      // transition.delay(delayLength)
+
+      d3.select("el")
+        .transition()
+          .delay(2000)
+          .style("width", "100px")
+          .style("height", "100px")
+          .style("background-color", "red");
+
+      // ==================
+      // Duration
+      // ==================
+      // transition.duration(durationLength)
+
+      d3.select("el")
+        .transition()
+          .delay(2000)
+          .duration(3000)
+          .style("width", "100px")
+          .style("height", "100px")
+          .style("background-color", "red");
+
+      // ==================
+      // Ease
+      // ==================
+      // transition.ease(easeType)
+
+      function applyTransition(selection, ease, delay) {
+        selection.transition()
+        .ease(ease)
+        .delay(delay)
+        .duration(2000)
+        .style("transform", "translateX(400px)")
+        .style("background-color", "blue");
+      }
+
+      d3.select("div.default")
+        .transition()
+        .duration(2000)
+        .style("left", "400px")
+        .style("background-color", "blue");
+
+      d3.select("div.elastic")
+        .call(applyTransition, d3.easeElastic, 1000);
+
+      d3.select("div.bounce")
+        .call(applyTransition, d3.easeBounce, 2000);
+
+      d3.select("div.back")
+        .call(applyTransition, d3.easeBack, 4000);
+
+      // ==================
+      // Transition chaining
+      // ==================
+
+      function changeShape() {
+        d3.select("div.shape")
+          // Transition 1
+          .transition()
+            .delay(1000)
+            .duration(2000)
+            .style("background-color", "red")
+            .style("border-radius", "50%")
+          // Transition 2
+          .transition()
+            .delay(1000)
+            .duration(2000)
+            .style("background-color", "blue")
+            .style("border-radius", "0px")
+        }
+
+        changeShape();
+        setInterval(changeShape, 6000);
+
+        // ==================
+        // Listening to transitional events
+        // ==================
+        // transition.on(eventType, [listener])
+        // eventType =
+        // start : triggered when the transition starts
+        // end : triggered when the transition ends
+        // interrupt : triggered when the transition is interrupted
+
+        d3.select("div")
+          .transition()
+            .delay(1000)
+            .duration(2000)
+            .style("background-color", "red")
+            .style("border-radius", "50%")
+            .on("start", function() { console.log("Started"); })
+            .on("end", function() { console.log("Finished"); })
+
+    </script>
+  </body>
+</html>
