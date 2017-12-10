@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>sandbox : co-contributions</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+  </head>
+  <style>
+    .grid-line {
+      fill: grey;
+      stroke: grey;
+      stroke-width: 0.3px;
+    }
+  </style>
+  <body>
+
+    <script>
+      const width = 500;
+      const height = 500;
+      const margin = 50;
+      const axisLength = width - 2 * margin;
+
+      const data = [
+        {code: "H04", name: "Pharmaceuticals/Health Products", indivs: 0, pacs: 61500, total: 61500},
+        {code: "K01", name: "Lawyers/Law Firms", indivs: 23240, pacs: 11500, total: 34740},
+        {code: "W06", name: "Retired", indivs: 27397, pacs: 0, total: 27397},
+        {code: "H01", name: "Health Professionals", indivs: 3127, pacs: 23500, total: 26627},
+        {code: "F10", name: "Real Estate", indivs: 18500, pacs: 1000, total: 19500},
+        {code: "N05", name: "Business Services", indivs: 7303, pacs: 2500, total: 9803},
+        {code: "B09", name: "Telecom Services", indivs: 10, pacs: 9500, total: 9510},
+        {code: "Q02", name: "Democratic/Liberal", indivs: 7300, pacs: 0, total: 7300},
+        {code: "H02", name: "Hospitals/Nursing Homes", indivs: 850, pacs: 6000, total: 6850},
+        {code: "H03", name: "Health Services/HMOs", indivs: 260, pacs: 6500, total: 6760}
+      ];
+
+      const stack = d3.stack()
+        .keys(["indivs", "pacs"]);
+
+      const series = stack(data);
+      console.log(series);
+
+      const xScale = d3.scaleBand()
+        .domain(data.map(function(d) { return d.code; }))
+        .rangeRound([0, axisLength]);
+
+      const yScale = d3.scaleLinear()
+        .domain([stackMax(), stackMin()])
+        .range([0, axisLength]).clamp(true);
+
+      const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+      function extractValues(series) {
+        let values = [];
+        series.forEach(function(value) {
+          value.forEach(function(item) {
+            values = values.concat(item);
+          });
+        });
+        return values;
+      }
+
+      function stackMin() {
+        const values = extractValues(series);
+        return d3.min(values);
+      }
+
+      function stackMax() {
+        const values = extractValues(series);
+        return d3.max(values);
+      }
+
+      const svgContainer = d3.select("body")
+        .append("svg")
+          .attr("width", width)
+          .attr("height", height)
+          .style("border", "1px solid");
+
+      function renderXAxis() {
+        var xAxis = d3.axisBottom(xScale);
+
+        svgContainer.append("g")
+            .classed("x-axis", true)
+            .attr("transform", function() {
+              return "translate(" + margin + "," + (height - margin) + ")";
+            })
+            .call(xAxis);
+      }
+
+      function renderYAxis() {
+        const yAxis = d3.axisLeft(yScale);
+
+        svgContainer.append("g")
+            .classed("y-axis", true)
+            .attr("transform", function() {
+              return "translate(" + margin + "," + margin + ")";
+            })
+            .call(yAxis);
+
+        svgContainer.selectAll("g.y-axis g.tick")
+          .append("line")
+            .classed("grid-line", true)
+            .attr("x1", 0)
+            .attr("y1", 0)
+            .attr("x2", axisLength)
+            .attr("y2", 0);
+      }
+
+      renderXAxis();
+      renderYAxis();
+
+      svgContainer.append("g")
+          .classed("stack-bar", true)
+          .attr("transform", "translate(" + margin + "," + margin + ")")
+        .selectAll("g")
+        .data(series)
+        .enter()
+        .append("g")
+          .attr("fill", function(d) {return colorScale(d.key)})
+        .selectAll("rect")
+        .data(function(d) {return d;})
+        .enter()
+        .append("rect")
+          .attr("x", function(d, i) { return i * 40;})
+          .attr("y", function(d) {return yScale(d["1"])})
+          .attr("width", 30)
+          .attr("height", function(d) {return axisLength - (yScale(d["1"] - d["0"]))});
+
+    </script>
+  </body>
+</html>
